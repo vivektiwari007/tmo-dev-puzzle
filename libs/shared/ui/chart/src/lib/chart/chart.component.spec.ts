@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChartComponent } from './chart.component';
+import { SharedUiChartModule } from '../shared-ui-chart.module';
+import { of, Subscription } from 'rxjs';
 
 describe('ChartComponent', () => {
   let component: ChartComponent;
@@ -8,18 +10,31 @@ describe('ChartComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ChartComponent ]
+      imports: [SharedUiChartModule],
+      declarations: []
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ChartComponent);
     component = fixture.componentInstance;
+    (component as any).data$ = of();
     fixture.detectChanges();
   });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  describe('ngOnInit()', () => {
+    it('should populate chart object', () => {
+      (component as any).data$ = of([{ "date": "2020-1-16", "open": 123.45, "close": 234.56 }]);
+      component.ngOnInit();
+      expect(component.chart).toBeDefined();
+    });
+  });
+  describe('ngOnDestroy()', () => {
+    it('should destroy subscription', () => {
+      (component as any).subscription = new Subscription();
+      spyOn((component as any).subscription, 'unsubscribe');
+      component.ngOnDestroy();
+      expect((component as any).subscription.unsubscribe).toHaveBeenCalled();
+    });
   });
 });

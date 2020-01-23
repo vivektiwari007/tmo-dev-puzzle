@@ -25,3 +25,15 @@ export function transformPriceQueryResponse(
       } as PriceQuery)
   );
 }
+export function filterOutPriceQueryResponse(
+  response: PriceQueryResponse[],
+  fromDate: Date,
+  toDate: Date
+): PriceQuery[] {
+  toDate.setDate(toDate.getDate()+1);
+  return transformPriceQueryResponse(response).filter(values => {
+      return (
+        new Date(values.date) >= fromDate &&
+        new Date(values.date) <= toDate)
+    });
+}
