@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PriceQueryFacade } from '@coding-challenge/stocks/data-access-price-query';
+import { STOCK_CONSTANT } from '../constants/stocks.constants';
 
 @Component({
   selector: 'coding-challenge-stocks',
@@ -8,22 +9,12 @@ import { PriceQueryFacade } from '@coding-challenge/stocks/data-access-price-que
   styleUrls: ['./stocks.component.css']
 })
 export class StocksComponent implements OnInit {
-  stockPickerForm: FormGroup;
-  symbol: string;
-  period: string;
-
-  quotes$ = this.priceQuery.priceQueries$;
-
-  timePeriods = [
-    { viewValue: 'All available data', value: 'max' },
-    { viewValue: 'Five years', value: '5y' },
-    { viewValue: 'Two years', value: '2y' },
-    { viewValue: 'One year', value: '1y' },
-    { viewValue: 'Year-to-date', value: 'ytd' },
-    { viewValue: 'Six months', value: '6m' },
-    { viewValue: 'Three months', value: '3m' },
-    { viewValue: 'One month', value: '1m' }
-  ];
+  public stockPickerForm: FormGroup;
+  public symbol: string;
+  public period: string;
+  public quotes$ = this.priceQuery.priceQueries$;
+  public readonly chart = STOCK_CONSTANT.chart;
+  private readonly timePeriods = STOCK_CONSTANT.timePeriods;
 
   constructor(private fb: FormBuilder, private priceQuery: PriceQueryFacade) {
     this.stockPickerForm = fb.group({
@@ -32,12 +23,13 @@ export class StocksComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  public ngOnInit() {
+  }
 
-  fetchQuote() {
+  public fetchQuote() {
+    const { symbol, period } = this.stockPickerForm.value;
     if (this.stockPickerForm.valid) {
-      const { symbol, period } = this.stockPickerForm.value;
-      this.priceQuery.fetchQuote(symbol, period);
+    this.priceQuery.fetchQuote(symbol, period);
     }
   }
 }
