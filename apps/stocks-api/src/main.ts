@@ -3,20 +3,20 @@
  * This is only a minimal backend to get started.
  **/
 import { Server } from 'hapi';
+import { stockPlugin } from './app/plugins/stocks.plugin';
 
+const cache = require('memory-cache');
+const memoryCache = new cache.Cache();
 const init = async () => {
   const server = new Server({
     port: 3333,
     host: 'localhost'
   });
 
-  server.route({
-    method: 'GET',
-    path: '/',
-    handler: (request, h) => {
-      return {
-        hello: 'world'
-      };
+  await server.register({
+    plugin: stockPlugin,
+    options: {
+      cache: memoryCache
     }
   });
 

@@ -3,5 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  cacheKey: 'stockcache',
+  apiPath: 'https://sandbox.iexapis.com',
+  mainStockAPI:'/beta/stock',
+  cacheTimeOut: 100000000
 };
